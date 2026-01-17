@@ -1,0 +1,15 @@
+{
+  "name": "package",
+  "version": "1.0.0",
+  "description": "It is a DigitalShadow main server",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Coded_Mind__",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
