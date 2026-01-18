@@ -10,6 +10,10 @@
   "author": "Coded_Mind__",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.2.1"
+    "@clerk/express": "^1.7.63",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "googleapis": "^170.1.0"
   }
 }
