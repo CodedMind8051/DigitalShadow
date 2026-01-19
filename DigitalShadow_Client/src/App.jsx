@@ -1,7 +1,8 @@
 import './App.css'
-import { UserButton, useAuth } from '@clerk/clerk-react';
+import { useAuth } from '@clerk/clerk-react';
 import HomeNotLogin from './components/HomeNotLogin.jsx';
 import { useEffect } from 'react';
+import Dashboard from './Dashboard.jsx';
 
 function App() {
   const { isSignedIn, userId } = useAuth();
@@ -17,11 +18,17 @@ function App() {
         body: JSON.stringify({
           userId: userId,
         }),
-      }).then((response) => response.json())
-        .then((data) => {
-          console.log("Success:", data);
-        })
-        .catch((error) => {
+      }).then((responses) => responses.json())
+        .then((response) => {
+          if (!response.YoutubeConnected) {
+            window.location.href = response.authUrl;
+          }
+          else {
+            console.log("User has connected Youtube");
+          }
+
+        }
+        ).catch((error) => {
           console.error("Error:", error);
         });
     }
@@ -34,7 +41,11 @@ function App() {
 
   return (
     <>
-      <UserButton />
+      <main className='flex  min-width-screen min-h-screen flex-col bg-neutral-900 text-white'>   
+        <Dashboard />
+
+      </main>
+
     </>
   )
 }

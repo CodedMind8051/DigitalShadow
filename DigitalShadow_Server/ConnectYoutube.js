@@ -1,6 +1,7 @@
 import { google } from 'googleapis'
 import dotenv from 'dotenv';
 
+dotenv.config()
 
 const AuthClient = () => {
     return new google.auth.OAuth2(
@@ -9,10 +10,11 @@ const AuthClient = () => {
         process.env.Google_Callback_url)
 }
 
-export  const url = AuthClient().generateAuthUrl({
+export  const GenerateUrlForYoutubeAccess =(UserId)=> AuthClient().generateAuthUrl({
     access_type: "offline",
     scope: ['profile', 'email', 'https://www.googleapis.com/auth/youtube.readonly'],
     prompt: "consent",
+    state: {UserId:UserId}
 })
 
 

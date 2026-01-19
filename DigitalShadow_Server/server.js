@@ -3,7 +3,7 @@ import { google } from 'googleapis'
 import dotenv from 'dotenv';
 import cors from "cors";
 import { clerkMiddleware, clerkClient } from '@clerk/express'
-import { GoogleAuth } from './ConnectYoutube.js';
+import { GoogleAuth, GenerateUrlForYoutubeAccess } from './ConnectYoutube.js';
 
 
 const app = express()
@@ -22,29 +22,34 @@ app.use(express.urlencoded({ extended: true }))
 
 
 app.post('/YoutubeConnectedCheck', async (req, res) => {
-    console.log(req.body.userId);
-    let user = await clerkClient.users.getUser(req.body.userId)
+    try {
+        let user = await clerkClient.users.getUser(req.body.userId)
 
-    if (user.privateMetadata.Refresh_Token) {
-        console.log("User has connected Youtube");
+        if (user.privateMetadata.Refresh_Token) {
+            res.json({ YoutubeConnected: true, refresh_token: user.privateMetadata.Refresh_Token })
+        }
+        else {
+            res.json({ YoutubeConnected: false, authUrl: GenerateUrlForYoutubeAccess(req.body.userId) })
+        }
+    } catch (error) {
+        console.error("Error during YoutubeConnectedCheck:", error)
+        res.status(500).send("Internal Server Error")
     }
-    else {
 
-        
-
-        await clerkClient.users.updateUserMetadata(req.body.userId, { privateMetadata: { Refresh_Token: "test123" } })
-    }
-
-
-    res.json({ message: 'Hello World!' })
 })
 
 
 app.get('/api/auth/callback/google', async (req, res) => {
-    const code = req.query.code
-    token = await GoogleAuth(code)
-    console.log(token)
-    res.send("Hii")
+    try {
+        const code = req.query.code
+        let token = await GoogleAuth(code)
+        await clerkClient.users.updateUserMetadata(req.query.state.UserId, { privateMetadata: { Refresh_Token: token.refresh_token, Access_Token: token.access_token } })
+        res.redirect("http://localhost:5173")
+    } catch (error) {
+        console.error("Error during Google OAuth callback:", error)
+        res.status(500).send("Internal Server Error")
+    }
+
 })
 
 
