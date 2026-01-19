@@ -43,7 +43,6 @@ function App() {
     <>
       <main className='flex  min-width-screen min-h-screen flex-col bg-neutral-900 text-white'>   
         <Dashboard />
-
       </main>
 
     </>

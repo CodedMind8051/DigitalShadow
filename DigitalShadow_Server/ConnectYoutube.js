@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config()
 
-const AuthClient = () => {
+export const AuthClient = () => {
     return new google.auth.OAuth2(
         process.env.GoogleClientID,
         process.env.Google_secret_key,

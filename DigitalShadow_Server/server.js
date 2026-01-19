@@ -1,9 +1,9 @@
 import express from 'express'
-import { google } from 'googleapis'
 import dotenv from 'dotenv';
 import cors from "cors";
 import { clerkMiddleware, clerkClient } from '@clerk/express'
 import { GoogleAuth, GenerateUrlForYoutubeAccess } from './ConnectYoutube.js';
+import { GetYoutubeData } from './FetchYoutubeHistoryAndAiwork.js';
 
 
 const app = express()
@@ -26,7 +26,8 @@ app.post('/YoutubeConnectedCheck', async (req, res) => {
         let user = await clerkClient.users.getUser(req.body.userId)
 
         if (user.privateMetadata.Refresh_Token) {
-            res.json({ YoutubeConnected: true, refresh_token: user.privateMetadata.Refresh_Token })
+            GetYoutubeData(user.privateMetadata.Refresh_Token, user.privateMetadata.Access_Token)
+            res.json({ YoutubeConnected: true})
         }
         else {
             res.json({ YoutubeConnected: false, authUrl: GenerateUrlForYoutubeAccess(req.body.userId) })
