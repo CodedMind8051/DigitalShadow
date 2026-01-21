@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-function Aiprocessing(youtubeData) {
+export async function Aiprocessing(youtubeData) {
     const ai = new GoogleGenAI({
         apiKey: process.env.Gemini_API_Key,
     });
@@ -23,22 +23,40 @@ function Aiprocessing(youtubeData) {
     for (let i = 0; i < models.length; i++) {
         const modelName = models[i];
 
-        try {
+        const prompt = `
+            Analyze the YouTube watch history below and classify each video into one of these categories:
+            Productive, Study, Tech, Programming, Time Pass, Brain Rot/fuck.
+            
+            Input data:
+            ${JSON.stringify(youtubeData, null, 2)}
+            
+            Return ONLY valid JSON that strictly matches the provided schema.
+            Do not include markdown, explanations, or extra text.
+            All summary fields that require it must be exactly 3 sentences.`;
 
-            ProccesedAIData = ai.models.generateContent({
+        try {
+            const Airesponse = await ai.models.generateContent({
                 model: modelName,
                 contents: [
                     {
                         role: "user",
-                        parts: [
-                            { text: "Explain what is motor in 1 sentences." }
-                        ],
-                    },
+                        parts: [{ text: prompt }]
+                    }
                 ],
-            })
+                generationConfig: {
+                    responseMimeType: "application/json"
+                }
+            });
+
+            if (Airesponse.candidates?.[0]?.content?.parts?.[0]?.text) {
+                console.log(Airesponse.candidates?.[0]?.content?.parts?.[0]?.text, modelName);
+                return "work"
+            }
 
         } catch (error) {
-
+            if (error) {
+                console.warn(`Model ${modelName} failed:`, error.message);
+            }
         }
 
     }
@@ -56,7 +74,8 @@ export async function GetYoutubeData(refresh_token, access_token) {
     const YoutubeData = await youtube.videos.list({
         part: 'snippet,contentDetails',
         myRating: 'like',
-        maxResults: 50
+        maxResults: 3
     });
-    console.log(YoutubeData.data.items)
+    await Aiprocessing(YoutubeData.data.items.slice(0, 3).map(video=>({title:video.snippet.title})))
 }
+

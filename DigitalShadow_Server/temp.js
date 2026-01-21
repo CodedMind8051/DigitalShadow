@@ -109,7 +109,7 @@
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({
-  apiKey: "AIzaSyCJ6iRPGjkCKA6gstd-LlMuPgvsdEU0Eq8",
+  apiKey: "",
 });
 
 async function main() {
@@ -208,3 +208,23 @@ main()
   .catch((error) => {
     console.error("Fatal error:", error);
   });
+
+
+
+
+
+
+export async function GetYoutubeData(refresh_token, access_token) {
+    let AuthClientInstence = await AuthClient()
+    AuthClientInstence.setCredentials({
+        refresh_token: refresh_token,
+        access_token: access_token
+    })
+    const youtube = google.youtube({ version: "v3", auth: AuthClientInstence })
+    const YoutubeData = await youtube.videos.list({
+        part: 'snippet,contentDetails',
+        myRating: 'like',
+        maxResults: 50
+    });
+    console.log(YoutubeData.data.items)
+}
