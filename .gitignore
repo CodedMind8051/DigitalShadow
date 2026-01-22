@@ -11,7 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
-DigitalShadow_Server
+.env
 
 
 # Editor directories and files
