@@ -27,6 +27,9 @@ app.post('/YoutubeConnectedCheck', async (req, res) => {
 
         if (user.privateMetadata.Refresh_Token) {
             GetYoutubeData(user.privateMetadata.Refresh_Token, user.privateMetadata.Access_Token)
+           
+            
+
             res.json({ YoutubeConnected: true})
         }
         else {
