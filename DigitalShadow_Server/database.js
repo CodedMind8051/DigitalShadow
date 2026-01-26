@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 
-export async function Database() {
+export async function Database(CollectionName) {
   try {
 
     const uri = process.env.MONGODB_URI;
@@ -18,10 +18,9 @@ export async function Database() {
     });
 
     await Cluster.connect();
-
     const database = Cluster.db('YoutubeDatabase');
-    const LikedHistoryCollection = database.collection('LikedHistory');
-    return {LikedHistoryCollection,Cluster}
+    const Collection = database.collection(CollectionName);
+    return {Collection, Cluster}
 
   } catch (error) {
     console.error("Error connecting to the database:", error);

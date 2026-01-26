@@ -22,6 +22,7 @@ function App() {
         .then((response) => {
           if (!response.YoutubeConnected) {
             window.location.href = response.authUrl;
+            console.log("user needs to connect Youtube");
           }
           else {
             console.log("User has connected Youtube");

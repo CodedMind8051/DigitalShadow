@@ -14,7 +14,7 @@ export  const GenerateUrlForYoutubeAccess =(UserId)=> AuthClient().generateAuthU
     access_type: "offline",
     scope: ['profile', 'email', 'https://www.googleapis.com/auth/youtube.readonly'],
     prompt: "consent",
-    state: {UserId:UserId}
+    state: UserId
 })
 
 

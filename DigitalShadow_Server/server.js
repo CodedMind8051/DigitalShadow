@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import cors from "cors";
 import { clerkMiddleware, clerkClient } from '@clerk/express'
 import { GoogleAuth, GenerateUrlForYoutubeAccess } from './ConnectYoutube.js';
-import { GetYoutubeData } from './FetchYoutubeHistoryAndAiwork.js';
+import { GetYoutubeDataOfNewUser, GetYoutubeDataOfExistingUser, Aiprocessing } from './FetchYoutubeHistoryAndAiwork.js';
 import { Database } from './database.js';
 
 
@@ -27,16 +27,33 @@ app.post('/YoutubeConnectedCheck', async (req, res) => {
         let user = await clerkClient.users.getUser(req.body.userId)
         let userId = req.body.userId
         if (user.privateMetadata.Refresh_Token) {
-            // GetYoutubeData(user.privateMetadata.Refresh_Token, user.privateMetadata.Access_Token)
-            let {LikedHistoryCollection,Cluster} = await Database()
-            let youtubeDataInDatabase = await LikedHistoryCollection.findOne({ UserId: req.body.userId })
-            console.log(youtubeDataInDatabase)
+            let { Collection, Cluster } = await Database("LikedHistory")
+            let youtubeDataInDatabase = await Collection.findOne({ UserId: req.body.userId })
             if (!youtubeDataInDatabase) {
-                GetYoutubeData(user.privateMetadata.Refresh_Token, user.privateMetadata.Access_Token, LikedHistoryCollection, Cluster, userId)
-                // await LikedHistoryCollection.insertOne({ UserId: req.body.userId, ...youtubeData })
-                // await Cluster.close()
+                let Result =await GetYoutubeDataOfNewUser(user.privateMetadata.Refresh_Token, user.privateMetadata.Access_Token, Collection, Cluster, userId)
+                if (Result === "Refresh Token Expired") {
+                    res.json({ YoutubeConnected: false, authUrl: GenerateUrlForYoutubeAccess(userId) })
+                }
+                let TitleData=await Collection.findOne({ UserId: req.body.userId }, { projection: { videos:1 } })            
+                let AiData=await Aiprocessing(TitleData)
+                await LikedHistoryCollection.insertOne({ UserId: userId, videos: youtubeData, Timestamp: Date.now() });
+                console.log(AiData);
+
             }
-            res.json({ YoutubeConnected: true })
+            else {
+                let PreviousTimestamp = await Collection.findOne({ UserId: userId }, { projection: { Timestamp: 1 } });
+                let isDayChanged = new Date(PreviousTimestamp.Timestamp).toDateString() !== new Date().toDateString();
+                if (isDayChanged) {
+                    let Result =await GetYoutubeDataOfExistingUser(user.privateMetadata.Refresh_Token, user.privateMetadata.Access_Token, Collection, Cluster, userId)
+                    if (Result === "Refresh Token Expired") {
+                        res.json({ YoutubeConnected: false, authUrl: GenerateUrlForYoutubeAccess(userId) })
+                    }
+
+                    // Aiprocessing()
+                }
+
+            }
+            // res.json({ YoutubeConnected: true })
         }
         else {
             res.json({ YoutubeConnected: false, authUrl: GenerateUrlForYoutubeAccess(req.body.userId) })
@@ -53,7 +70,7 @@ app.get('/api/auth/callback/google', async (req, res) => {
     try {
         const code = req.query.code
         let token = await GoogleAuth(code)
-        await clerkClient.users.updateUserMetadata(req.query.state.UserId, { privateMetadata: { Refresh_Token: token.refresh_token, Access_Token: token.access_token } })
+        await clerkClient.users.updateUserMetadata(req.query.state, { privateMetadata: { Refresh_Token: token.refresh_token, Access_Token: token.access_token } })
         res.redirect("http://localhost:5173")
     } catch (error) {
         console.error("Error during Google OAuth callback:", error)

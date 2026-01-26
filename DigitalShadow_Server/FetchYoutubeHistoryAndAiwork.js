@@ -3,6 +3,7 @@ import { AuthClient } from './ConnectYoutube.js';
 import { GoogleGenAI } from "@google/genai";
 import dotenv from 'dotenv';
 
+
 dotenv.config();
 
 export async function Aiprocessing(youtubeData) {
@@ -149,13 +150,6 @@ export async function Aiprocessing(youtubeData) {
                      "percentage": number
                    }
                  ],
-                 "videoCategoryMap": [
-                   {
-                     "videoIndex": number,
-                     "categoryIndex": number,
-                     "title": string
-                   }
-                 ],
                  "productivityTypes": [
                    {
                      "type": "Productive" | "Study" | "Time Pass" | "Brain Rot",
@@ -201,8 +195,8 @@ export async function Aiprocessing(youtubeData) {
             });
 
             if (Airesponse.candidates?.[0]?.content?.parts?.[0]?.text) {
-                console.log(Airesponse.candidates?.[0]?.content?.parts?.[0]?.text, modelName);
-                return "work"
+                // console.log(Airesponse.candidates?.[0]?.content?.parts?.[0]?.text, modelName);
+                return Airesponse.candidates?.[0]?.content?.parts?.[0]?.text
             }
 
         } catch (error) {
@@ -216,7 +210,7 @@ export async function Aiprocessing(youtubeData) {
 
 
 
-export async function GetYoutubeData(refresh_token, access_token, LikedHistoryCollection, Cluster, userId) {
+export async function GetYoutubeDataOfNewUser(refresh_token, access_token, LikedHistoryCollection, Cluster, userId) {
     try {
         let AuthClientInstence = await AuthClient()
         AuthClientInstence.setCredentials({
@@ -234,29 +228,85 @@ export async function GetYoutubeData(refresh_token, access_token, LikedHistoryCo
                 pageToken: nextPageToken
             });
             nextPageToken = YoutubeData.data.nextPageToken;
-            console.log(i)
             let youtubeData = YoutubeData.data.items.map(video => ({ title: video.snippet.title }));
 
             if (i === 0) {
-                await LikedHistoryCollection.insertOne({ UserId: userId, videos: youtubeData })
+                await LikedHistoryCollection.insertOne({ UserId: userId, videos: youtubeData, Timestamp: Date.now() });
                 i++
             }
             else {
                 await LikedHistoryCollection.updateOne(
                     { UserId: userId },
-                    { $push: { videos: { $each: youtubeData } } },
+                    {
+                        $push: { videos: { $each: youtubeData } },
+                        $set: { Timestamp: Date.now() }
+                    },
                     { upsert: true }
                 );
+                i++
             }
-            i++
-            // console.log(i)
 
         }
+
         Cluster.close()
     } catch (error) {
-        console.error("Error fetching YouTube data:", error)
+        console.error("Error fetching YouTube data:")
+        return "Refresh Token Expired"
     }
 
     // await Aiprocessing(YoutubeData.data.items.slice(0, 10).map(video => ({ title: video.snippet.title })))
 }
 
+
+
+
+export async function GetYoutubeDataOfExistingUser(refresh_token, access_token, LikedHistoryCollection, Cluster, userId) {
+    try {
+        let AuthClientInstence = await AuthClient()
+        AuthClientInstence.setCredentials({
+            refresh_token: refresh_token,
+            access_token: access_token
+        })
+        const youtube = google.youtube({ version: "v3", auth: AuthClientInstence })
+        let nextPageToken = null;
+
+        while (true) {
+            const YoutubeData = await youtube.videos.list({
+                part: 'snippet,contentDetails',
+                myRating: 'like',
+                maxResults: 100,
+                pageToken: nextPageToken
+            });
+            nextPageToken = YoutubeData.data.nextPageToken;
+            let stop = false
+            let LastProcessedVideo = await LikedHistoryCollection.findOne({ UserId: userId }, { projection: { videos: { $slice: 1 } } });
+            let youtubeData = YoutubeData.data.items.map(video => {
+                if (stop || video.snippet.title === LastProcessedVideo.videos[0].title) {
+                    nextPageToken = null;
+                    stop = true
+                    return null;
+                }
+                return { title: video.snippet.title }
+            }).filter(video => video !== null);
+
+            await LikedHistoryCollection.updateOne(
+                { UserId: userId },
+                {
+                    $push: { videos: { $each: youtubeData, $position:0} },
+                    $set: { Timestamp: Date.now() }
+                },
+                { upsert: true }
+            );
+            if (nextPageToken === null) {
+                break;
+            }
+        }
+        Cluster.close()
+    } catch (error) {
+        console.error("Error fetching YouTube data:")
+         return "Refresh Token Expired"
+    
+    }
+
+    // await Aiprocessing(YoutubeData.data.items.slice(0, 10).map(video => ({ title: video.snippet.title })))
+}
