@@ -4,6 +4,7 @@ import cors from "cors";
 import { clerkMiddleware, clerkClient } from '@clerk/express'
 import { GoogleAuth, GenerateUrlForYoutubeAccess } from './ConnectYoutube.js';
 import { GetYoutubeData } from './FetchYoutubeHistoryAndAiwork.js';
+import { Database } from './database.js';
 
 
 const app = express()
@@ -24,13 +25,18 @@ app.use(express.urlencoded({ extended: true }))
 app.post('/YoutubeConnectedCheck', async (req, res) => {
     try {
         let user = await clerkClient.users.getUser(req.body.userId)
-
+        let userId = req.body.userId
         if (user.privateMetadata.Refresh_Token) {
-            GetYoutubeData(user.privateMetadata.Refresh_Token, user.privateMetadata.Access_Token)
-           
-            
-
-            res.json({ YoutubeConnected: true})
+            // GetYoutubeData(user.privateMetadata.Refresh_Token, user.privateMetadata.Access_Token)
+            let {LikedHistoryCollection,Cluster} = await Database()
+            let youtubeDataInDatabase = await LikedHistoryCollection.findOne({ UserId: req.body.userId })
+            console.log(youtubeDataInDatabase)
+            if (!youtubeDataInDatabase) {
+                GetYoutubeData(user.privateMetadata.Refresh_Token, user.privateMetadata.Access_Token, LikedHistoryCollection, Cluster, userId)
+                // await LikedHistoryCollection.insertOne({ UserId: req.body.userId, ...youtubeData })
+                // await Cluster.close()
+            }
+            res.json({ YoutubeConnected: true })
         }
         else {
             res.json({ YoutubeConnected: false, authUrl: GenerateUrlForYoutubeAccess(req.body.userId) })

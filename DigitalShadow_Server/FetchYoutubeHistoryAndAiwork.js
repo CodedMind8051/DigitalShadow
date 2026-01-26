@@ -216,7 +216,7 @@ export async function Aiprocessing(youtubeData) {
 
 
 
-export async function GetYoutubeData(refresh_token, access_token) {
+export async function GetYoutubeData(refresh_token, access_token, LikedHistoryCollection, Cluster, userId) {
     try {
         let AuthClientInstence = await AuthClient()
         AuthClientInstence.setCredentials({
@@ -224,12 +224,35 @@ export async function GetYoutubeData(refresh_token, access_token) {
             access_token: access_token
         })
         const youtube = google.youtube({ version: "v3", auth: AuthClientInstence })
-        const YoutubeData = await youtube.videos.list({
-            part: 'snippet,contentDetails',
-            myRating: 'like',
-            maxResults: 10
-        });
-        return YoutubeData.data.items.map(video => ({ title: video.snippet.title }));
+        let nextPageToken = null;
+        let i = 0;
+        while (i < 3) {
+            const YoutubeData = await youtube.videos.list({
+                part: 'snippet,contentDetails',
+                myRating: 'like',
+                maxResults: 100,
+                pageToken: nextPageToken
+            });
+            nextPageToken = YoutubeData.data.nextPageToken;
+            console.log(i)
+            let youtubeData = YoutubeData.data.items.map(video => ({ title: video.snippet.title }));
+
+            if (i === 0) {
+                await LikedHistoryCollection.insertOne({ UserId: userId, videos: youtubeData })
+                i++
+            }
+            else {
+                await LikedHistoryCollection.updateOne(
+                    { UserId: userId },
+                    { $push: { videos: { $each: youtubeData } } },
+                    { upsert: true }
+                );
+            }
+            i++
+            // console.log(i)
+
+        }
+        Cluster.close()
     } catch (error) {
         console.error("Error fetching YouTube data:", error)
     }

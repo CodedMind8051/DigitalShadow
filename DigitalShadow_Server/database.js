@@ -1,30 +1,34 @@
-import { MongoClient , ServerApiVersion } from "mongodb";
+import { MongoClient, ServerApiVersion } from "mongodb";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 
-const uri = process.env.MONGODB_URI;
-
-const DataBase = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
-
-
-async function run() {
+export async function Database() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await DataBase.connect();
-    // Send a ping to confirm a successful connection
-    await DataBase.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await DataBase.close();
+
+    const uri = process.env.MONGODB_URI;
+
+    const Cluster = new MongoClient(uri, {
+      serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+      }
+    });
+
+    await Cluster.connect();
+
+    const database = Cluster.db('YoutubeDatabase');
+    const LikedHistoryCollection = database.collection('LikedHistory');
+    return {LikedHistoryCollection,Cluster}
+
+  } catch (error) {
+    console.error("Error connecting to the database:", error);
   }
+
+  // finally {
+  //   // Ensures that the client will close when you finish/error
+  //   await Cluster.close();
+  // }
 }
-run().catch(console.dir);
