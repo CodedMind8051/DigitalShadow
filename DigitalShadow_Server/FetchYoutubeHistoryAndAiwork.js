@@ -7,7 +7,7 @@ import { Database } from './database.js';
 
 dotenv.config();
 
-export async function Aiprocessing(youtubeData,isNewUser,userId) {
+export async function Aiprocessing(youtubeData, isNewUser, userId) {
     const ai = new GoogleGenAI({
         apiKey: process.env.Gemini_API_Key,
     });
@@ -194,16 +194,15 @@ export async function Aiprocessing(youtubeData,isNewUser,userId) {
                     responseMimeType: "application/json"
                 }
             });
-            let AiData=Airesponse.candidates?.[0]?.content?.parts?.[0]?.text
+            let AiDataString = Airesponse.candidates?.[0]?.content?.parts?.[0]?.text
 
-            if (AiData) {
-                // if (isNewUser) {
-                //     let { Collection, Cluster } = await Database("AiProcessedData")
-                //     await Collection.insertOne({ UserId: userId, videos: youtubeData, Timestamp: Date.now() });
-
-                // }
-
-
+            let AiReplacedData = AiDataString.replaceAll("```", "").replaceAll("json", "")
+            let AiJsonData = JSON.parse(AiReplacedData)
+            if (AiJsonData) {
+                if (isNewUser) {
+                    let { Collection, Cluster } = await Database("AiProcessedData")
+                    await Collection.insertOne({ UserId: userId, Data: AiJsonData, Timestamp: Date.now() });
+                }
                 return Airesponse.candidates?.[0]?.content?.parts?.[0]?.text
             }
 

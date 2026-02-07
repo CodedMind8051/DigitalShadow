@@ -25,9 +25,4 @@ export async function Database(CollectionName) {
   } catch (error) {
     console.error("Error connecting to the database:", error);
   }
-
-  // finally {
-  //   // Ensures that the client will close when you finish/error
-  //   await Cluster.close();
-  // }
 }

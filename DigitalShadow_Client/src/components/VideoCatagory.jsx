@@ -3,7 +3,7 @@ import {  Target } from 'lucide-react';
 function VideoCatagory({ categories, isVisible }) {
   return (
 
-    <div className="relative mb-10 w-[80%] animate-slide-bottom" style={{ animationDelay: '200ms' }}>
+    <div className="relative  max-[800px]:w-[95%] mb-10 w-[80%] animate-slide-bottom" style={{ animationDelay: '200ms' }}>
       <div className="absolute inset-0 bg-gradient-to-br from-neutral-900/50 to-black rounded-2xl blur-xl" />
       <div className="relative border border-neutral-800 rounded-2xl p-8 bg-gradient-to-br from-neutral-950 to-black">
         <div className="flex items-center justify-between mb-8">

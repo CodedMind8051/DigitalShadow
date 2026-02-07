@@ -35,11 +35,7 @@ app.post('/YoutubeConnectedCheck', async (req, res) => {
                     res.json({ YoutubeConnected: false, authUrl: GenerateUrlForYoutubeAccess(userId) })
                 }
                 let TitleData = await Collection.findOne({ UserId: req.body.userId }, { projection: { videos: 1 } })
-                let AiDataString = await Aiprocessing(TitleData, true, userId)
-                let AiReplacedData = AiDataString.replaceAll("```", "").replaceAll("json", "")
-                let AiJsonData=JSON.parse(AiReplacedData)
-                console.log(AiJsonData.categories)
-                console.log(typeof AiJsonData)
+                await Aiprocessing(TitleData, true, userId)
             }
             else {
                 let PreviousTimestamp = await Collection.findOne({ UserId: userId }, { projection: { Timestamp: 1 } });
@@ -50,7 +46,7 @@ app.post('/YoutubeConnectedCheck', async (req, res) => {
                         res.json({ YoutubeConnected: false, authUrl: GenerateUrlForYoutubeAccess(userId) })
                     }
                     else {
-
+                          
                     }
 
                     // Aiprocessing()
