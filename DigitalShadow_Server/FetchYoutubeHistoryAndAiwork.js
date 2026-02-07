@@ -2,11 +2,12 @@ import { google } from 'googleapis'
 import { AuthClient } from './ConnectYoutube.js';
 import { GoogleGenAI } from "@google/genai";
 import dotenv from 'dotenv';
+import { Database } from './database.js';
 
 
 dotenv.config();
 
-export async function Aiprocessing(youtubeData) {
+export async function Aiprocessing(youtubeData,isNewUser,userId) {
     const ai = new GoogleGenAI({
         apiKey: process.env.Gemini_API_Key,
     });
@@ -193,9 +194,16 @@ export async function Aiprocessing(youtubeData) {
                     responseMimeType: "application/json"
                 }
             });
+            let AiData=Airesponse.candidates?.[0]?.content?.parts?.[0]?.text
 
-            if (Airesponse.candidates?.[0]?.content?.parts?.[0]?.text) {
-                // console.log(Airesponse.candidates?.[0]?.content?.parts?.[0]?.text, modelName);
+            if (AiData) {
+                // if (isNewUser) {
+                //     let { Collection, Cluster } = await Database("AiProcessedData")
+                //     await Collection.insertOne({ UserId: userId, videos: youtubeData, Timestamp: Date.now() });
+
+                // }
+
+
                 return Airesponse.candidates?.[0]?.content?.parts?.[0]?.text
             }
 
@@ -292,7 +300,7 @@ export async function GetYoutubeDataOfExistingUser(refresh_token, access_token, 
             await LikedHistoryCollection.updateOne(
                 { UserId: userId },
                 {
-                    $push: { videos: { $each: youtubeData, $position:0} },
+                    $push: { videos: { $each: youtubeData, $position: 0 } },
                     $set: { Timestamp: Date.now() }
                 },
                 { upsert: true }
@@ -304,8 +312,8 @@ export async function GetYoutubeDataOfExistingUser(refresh_token, access_token, 
         Cluster.close()
     } catch (error) {
         console.error("Error fetching YouTube data:")
-         return "Refresh Token Expired"
-    
+        return "Refresh Token Expired"
+
     }
 
     // await Aiprocessing(YoutubeData.data.items.slice(0, 10).map(video => ({ title: video.snippet.title })))

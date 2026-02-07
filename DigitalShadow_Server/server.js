@@ -30,23 +30,27 @@ app.post('/YoutubeConnectedCheck', async (req, res) => {
             let { Collection, Cluster } = await Database("LikedHistory")
             let youtubeDataInDatabase = await Collection.findOne({ UserId: req.body.userId })
             if (!youtubeDataInDatabase) {
-                let Result =await GetYoutubeDataOfNewUser(user.privateMetadata.Refresh_Token, user.privateMetadata.Access_Token, Collection, Cluster, userId)
+                let Result = await GetYoutubeDataOfNewUser(user.privateMetadata.Refresh_Token, user.privateMetadata.Access_Token, Collection, Cluster, userId)
                 if (Result === "Refresh Token Expired") {
                     res.json({ YoutubeConnected: false, authUrl: GenerateUrlForYoutubeAccess(userId) })
                 }
-                let TitleData=await Collection.findOne({ UserId: req.body.userId }, { projection: { videos:1 } })            
-                let AiData=await Aiprocessing(TitleData)
-                await LikedHistoryCollection.insertOne({ UserId: userId, videos: youtubeData, Timestamp: Date.now() });
-                console.log(AiData);
-
+                let TitleData = await Collection.findOne({ UserId: req.body.userId }, { projection: { videos: 1 } })
+                let AiDataString = await Aiprocessing(TitleData, true, userId)
+                let AiReplacedData = AiDataString.replaceAll("```", "").replaceAll("json", "")
+                let AiJsonData=JSON.parse(AiReplacedData)
+                console.log(AiJsonData.categories)
+                console.log(typeof AiJsonData)
             }
             else {
                 let PreviousTimestamp = await Collection.findOne({ UserId: userId }, { projection: { Timestamp: 1 } });
                 let isDayChanged = new Date(PreviousTimestamp.Timestamp).toDateString() !== new Date().toDateString();
                 if (isDayChanged) {
-                    let Result =await GetYoutubeDataOfExistingUser(user.privateMetadata.Refresh_Token, user.privateMetadata.Access_Token, Collection, Cluster, userId)
+                    let Result = await GetYoutubeDataOfExistingUser(user.privateMetadata.Refresh_Token, user.privateMetadata.Access_Token, Collection, Cluster, userId)
                     if (Result === "Refresh Token Expired") {
                         res.json({ YoutubeConnected: false, authUrl: GenerateUrlForYoutubeAccess(userId) })
+                    }
+                    else {
+
                     }
 
                     // Aiprocessing()
