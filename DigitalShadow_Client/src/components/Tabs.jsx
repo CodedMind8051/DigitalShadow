@@ -1,9 +1,7 @@
-import React from 'react'
-
 function Tabs(  {activeTab, setActiveTab }) {
     return (
         <div className="flex gap-1  p-1 bg-neutral-900/50 rounded-xl border border-neutral-800 w-fit animate-scale" style={{ animationDelay: '100ms' }}>
-            {['today', 'week', 'month'].map((tab) => (
+            {['last 24 hours'].map((tab) => (
                 <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}

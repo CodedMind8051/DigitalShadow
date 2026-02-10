@@ -35,25 +35,42 @@ app.post('/YoutubeConnectedCheck', async (req, res) => {
                     res.json({ YoutubeConnected: false, authUrl: GenerateUrlForYoutubeAccess(userId) })
                 }
                 let TitleData = await Collection.findOne({ UserId: req.body.userId }, { projection: { videos: 1 } })
-                await Aiprocessing(TitleData, true, userId)
+                let AiData = await Aiprocessing(TitleData, true, userId)
+                let daysPassed=0
+                res.json({AiData,daysPassed:daysPassed,YoutubeConnected: true})
             }
             else {
                 let PreviousTimestamp = await Collection.findOne({ UserId: userId }, { projection: { Timestamp: 1 } });
-                let isDayChanged = new Date(PreviousTimestamp.Timestamp).toDateString() !== new Date().toDateString();
-                if (isDayChanged) {
+                const prev = new Date(PreviousTimestamp.Timestamp).getTime();
+                const now = Date.now();
+
+                const diffMs = now - prev;
+                const hoursPassed = Math.floor(diffMs / (1000 * 60 * 60));
+                const daysPassed = Math.floor(hoursPassed / 24);
+
+                const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+                let is24HoursPassed = Date.now() - new Date(PreviousTimestamp.Timestamp).getTime() >= TWENTY_FOUR_HOURS;
+
+                if (is24HoursPassed) {
                     let Result = await GetYoutubeDataOfExistingUser(user.privateMetadata.Refresh_Token, user.privateMetadata.Access_Token, Collection, Cluster, userId)
                     if (Result === "Refresh Token Expired") {
                         res.json({ YoutubeConnected: false, authUrl: GenerateUrlForYoutubeAccess(userId) })
                     }
                     else {
-                          
+                        let AiInputVideoData = await Collection.findOne({ UserId: userId }, { projection: { _id: 0, videos: { $slice: Result } } })
+                        console.log(AiInputVideoData.videos)
+                        if (AiInputVideoData.videos?.length) {
+                            let AiData = await Aiprocessing(AiInputVideoData.videos, false, userId)
+                            res.json({AiData,daysPassed:daysPassed,YoutubeConnected: true})
+                        }
                     }
-
-                    // Aiprocessing()
+                } else {
+                    let { Collection, Cluster } = await Database("AiProcessedData")
+                    let AiData = await Collection.findOne({ UserId:userId }, { projection: {Data: 1, _id:0,  } })
+                    res.json({AiData,daysPassed:daysPassed,YoutubeConnected: true})
+                    Cluster.close()
                 }
-
             }
-            // res.json({ YoutubeConnected: true })
         }
         else {
             res.json({ YoutubeConnected: false, authUrl: GenerateUrlForYoutubeAccess(req.body.userId) })

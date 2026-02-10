@@ -139,6 +139,8 @@ export async function Aiprocessing(youtubeData, isNewUser, userId) {
                - No extra keys.
                - Sentence limits must be followed EXACTLY.
                
+
+               Also select icon from this list=[Play, Trophy, Zap, Calendar, BarChart3, PieChart, Activity, Target, Flame, TrendingUp, Sparkles, ArrowUpRight, ChevronRight, Brain, Coffee, Newspaper, Star, BookOpen]
                --------------------
                REQUIRED OUTPUT SCHEMA
                --------------------
@@ -148,27 +150,31 @@ export async function Aiprocessing(youtubeData, isNewUser, userId) {
                      "index": number,
                      "name": string,
                      "totalVideos": number,
-                     "percentage": number
+                     "percentage": number,
+                     "icon":"icon from above list"
                    }
                  ],
                  "productivityTypes": [
                    {
                      "type": "Productive" | "Study" | "Time Pass" | "Brain Rot",
                      "totalVideos": number,
-                     "percentage": number
+                     "percentage": number,
+                     "icon":"icon from above list"
                    }
                  ],
                  "importantNews": [
                    {
                      "title": string,
                      "sourceCategory": string,
-                     "reason": string
+                     "reason": string,
+                     "icon":"icon from above list"
                    }
                  ],
                  "importantEvents": [
                    {
                      "title": string,
-                     "explanation": string
+                     "explanation": string,
+                     "icon":"icon from above list"
                    }
                  ],
                  "dailySummary": string,
@@ -198,13 +204,20 @@ export async function Aiprocessing(youtubeData, isNewUser, userId) {
 
             let AiReplacedData = AiDataString.replaceAll("```", "").replaceAll("json", "")
             let AiJsonData = JSON.parse(AiReplacedData)
-            if (AiJsonData) {
-                if (isNewUser) {
-                    let { Collection, Cluster } = await Database("AiProcessedData")
+            console.log(AiJsonData)
+            let { Collection, Cluster } = await Database("AiProcessedData")
+
+            try {
+                if (AiJsonData) {
                     await Collection.insertOne({ UserId: userId, Data: AiJsonData, Timestamp: Date.now() });
+                    return AiJsonData
                 }
-                return Airesponse.candidates?.[0]?.content?.parts?.[0]?.text
+            } catch (error) {
+                console.warn(error)
+                return error
+
             }
+            Cluster.close()
 
         } catch (error) {
             if (error) {
@@ -231,7 +244,7 @@ export async function GetYoutubeDataOfNewUser(refresh_token, access_token, Liked
             const YoutubeData = await youtube.videos.list({
                 part: 'snippet,contentDetails',
                 myRating: 'like',
-                maxResults: 100,
+                maxResults: 50,
                 pageToken: nextPageToken
             });
             nextPageToken = YoutubeData.data.nextPageToken;
@@ -276,24 +289,27 @@ export async function GetYoutubeDataOfExistingUser(refresh_token, access_token, 
         })
         const youtube = google.youtube({ version: "v3", auth: AuthClientInstence })
         let nextPageToken = null;
-
+        let LastProcessedVideo = await LikedHistoryCollection.findOne({ UserId: userId }, { projection: { videos: { $slice: 1 } } });
+        let lastVideoIndex = 0
         while (true) {
             const YoutubeData = await youtube.videos.list({
                 part: 'snippet,contentDetails',
                 myRating: 'like',
-                maxResults: 100,
+                maxResults: 50,
                 pageToken: nextPageToken
             });
             nextPageToken = YoutubeData.data.nextPageToken;
             let stop = false
-            let LastProcessedVideo = await LikedHistoryCollection.findOne({ UserId: userId }, { projection: { videos: { $slice: 1 } } });
             let youtubeData = YoutubeData.data.items.map(video => {
                 if (stop || video.snippet.title === LastProcessedVideo.videos[0].title) {
                     nextPageToken = null;
                     stop = true
                     return null;
+                } else {
+                    lastVideoIndex++
+                    return { title: video.snippet.title }
                 }
-                return { title: video.snippet.title }
+
             }).filter(video => video !== null);
 
             await LikedHistoryCollection.updateOne(
@@ -309,6 +325,8 @@ export async function GetYoutubeDataOfExistingUser(refresh_token, access_token, 
             }
         }
         Cluster.close()
+        return lastVideoIndex
+
     } catch (error) {
         console.error("Error fetching YouTube data:")
         return "Refresh Token Expired"

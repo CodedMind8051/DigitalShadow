@@ -6,8 +6,6 @@ function Header() {
     <div className="border-b border-neutral-800 bg-black/80 backdrop-blur-xl sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between gap-3">
-          
-          {/* Logo + Title */}
           <div className="flex items-center gap-3 sm:gap-4 min-w-0">
             <div className="relative shrink-0">
               <div className="absolute inset-0 bg-white/10 rounded-xl blur-xl animate-pulse" />
@@ -25,11 +23,7 @@ function Header() {
               </p>
             </div>
           </div>
-
-          {/* Actions */}
           <div className="flex items-center gap-3 sm:gap-6 shrink-0">
-            
-            {/* Button */}
             <button
               className="group relative px-3 sm:px-6 py-2 sm:py-2.5 bg-white text-black rounded-lg text-xs sm:text-sm font-semibold overflow-hidden"
             >
@@ -41,7 +35,6 @@ function Header() {
               </span>
             </button>
 
-            {/* User Avatar */}
             <UserButton
               appearance={{
                 elements: {

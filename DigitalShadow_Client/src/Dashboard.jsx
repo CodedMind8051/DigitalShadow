@@ -6,15 +6,15 @@ import { Play, Trophy, Zap, Activity, Target ,Sparkles,Star} from 'lucide-react'
 import VideoTypeScores from './components/ScoreType.jsx'
 import ImportantNews from './components/News.jsx'
 
-function Dashboard() {
-    const [activeTab, setActiveTab] = useState('today');
-    const categories = [
-        { name: 'Cricket Learning', videos: 12, percentage: 25, color: '#22c55e', icon: Trophy },
-        { name: 'Cricket Matches', videos: 14, percentage: 29, color: '#3b82f6', icon: Play },
-        { name: 'Tech Tutorials', videos: 10, percentage: 21, color: '#a855f7', icon: Zap },
-        { name: 'Entertainment', videos: 8, percentage: 17, color: '#f59e0b', icon: Activity },
-        { name: 'Time Wasted', videos: 4, percentage: 8, color: '#ef4444', icon: Target }
-    ];
+function Dashboard({categories}) {
+    const [activeTab, setActiveTab] = useState('last 24 hours');
+    // const categories = [
+    //     { name: 'Cricket Learning', videos: 12, percentage: 25, color: '#22c55e', icon: Trophy },
+    //     { name: 'Cricket Matches', videos: 14, percentage: 29, color: '#3b82f6', icon: Play },
+    //     { name: 'Tech Tutorials', videos: 10, percentage: 21, color: '#a855f7', icon: Zap },
+    //     { name: 'Entertainment', videos: 8, percentage: 17, color: '#f59e0b', icon: Activity },
+    //     { name: 'Time Wasted', videos: 4, percentage: 8, color: '#ef4444', icon: Target }
+    // ];
 
     const [countUp, setCountUp] = useState({ productive: 80, study: 90, brain: 30, timepass: 60 });
 

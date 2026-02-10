@@ -3,9 +3,11 @@ import { useAuth } from '@clerk/clerk-react';
 import HomeNotLogin from './components/HomeNotLogin.jsx';
 import { useEffect } from 'react';
 import Dashboard from './Dashboard.jsx';
+import { useState } from 'react';
 
 function App() {
   const { isSignedIn, userId } = useAuth();
+  const [categories, setcategories] = useState(null)
 
   useEffect(() => {
     if (isSignedIn) {
@@ -22,10 +24,11 @@ function App() {
         .then((response) => {
           if (!response.YoutubeConnected) {
             window.location.href = response.authUrl;
-            console.log("user needs to connect Youtube");
+            console.warn("user needs to connect Youtube");
           }
           else {
-            console.log("User has connected Youtube");
+            console.log(response.AiData.Data[0].categories);
+            setcategories(response.AiData.Data[0].categories)
           }
 
         }
@@ -43,7 +46,7 @@ function App() {
   return (
     <>
       <main className='flex  min-width-screen min-h-screen flex-col bg-neutral-900 text-white'>   
-        <Dashboard />
+        <Dashboard  categories={categories}/>
       </main>
 
     </>

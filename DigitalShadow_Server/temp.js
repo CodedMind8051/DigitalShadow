@@ -396,3 +396,20 @@
 //                --------------------
 //                ${JSON.stringify(youtubeData, null, 2)}
 //                `;
+
+
+
+        // if (isNewUser) {
+                    //     await Collection.insertOne({ UserId: userId, Data: [AiJsonData], Timestamp: Date.now() });
+                    // }
+                    // else {
+                    //     await Collection.updateOne(
+                    //         { UserId: userId },
+                    //         {
+                    //             $push: { Data:AiJsonData},
+                    //             $set: { Timestamp: Date.now() }
+                    //         },
+                    //         { upsert: true }
+                    //     );
+
+                    // }
