@@ -1,31 +1,28 @@
 import { ChevronRight, Newspaper } from 'lucide-react';
 
-
-
-
-const NewsCard = ({ news, idx }) => {
-    const Icon = news.icon;
+const NewsCard = ({ ImportantNewsData, idx }) => {
+    const Icon = Newspaper;
     return (
         <div
             className="group relative animate-scale card-hover"
             style={{ animationDelay: `${(idx + 10) * 100}ms` }}
         >
-            <div className="absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ backgroundColor: `${news.color}20` }} />
+            <div className="absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ backgroundColor: `${ImportantNewsData.color}20` }} />
             <div className="relative border border-neutral-800 rounded-2xl p-6 bg-black/50 backdrop-blur-sm overflow-hidden">
                 <div className="shimmer absolute inset-0" />
                 <div className="relative">
                     <div className="flex items-start gap-3 mb-3">
-                        <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${news.color}20` }}>
-                            <Icon className="w-5 h-5" style={{ color: news.color }} />
+                        <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${ImportantNewsData.color}20` }}>
+                            <Icon className="w-5 h-5" style={{ color: ImportantNewsData.color }} />
                         </div>
                         <div className="flex-1">
-                            <span className="text-xs font-semibold px-2 py-1 rounded-full" style={{ backgroundColor: `${news.color}20`, color: news.color }}>
-                                {news.category}
+                            <span className="text-xs font-semibold px-2 py-1 rounded-full" style={{ backgroundColor: `${ImportantNewsData.color}20`, color: ImportantNewsData.color }}>
+                                {ImportantNewsData.sourceCategory}
                             </span>
                         </div>
                     </div>
-                    <h4 className="font-bold text-white text-base mb-2 leading-tight">{news.title}</h4>
-                    <p className="text-xs text-neutral-400 font-medium">{news.source}</p>
+                    <h4 className="font-bold text-white text-base mb-2 leading-tight">{ImportantNewsData.title}</h4>
+                    <p className="text-xs text-neutral-400 font-medium">{ImportantNewsData.sourceCategory}</p>
                 </div>
                 <ChevronRight className="absolute bottom-4 right-4 w-4 h-4 text-neutral-600 group-hover:text-neutral-400 group-hover:translate-x-1 transition-all" />
             </div>
@@ -34,7 +31,7 @@ const NewsCard = ({ news, idx }) => {
 };
 
 
-export default function ImportantNews({ news }) {
+export default function ImportantNews({ ImportantNewsData }) {
     return (
         <div className="relative mb-10 animate-scale  max-[800px]:w-[95%] w-[65%]" style={{ animationDelay: '700ms' }}>
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl blur-2xl" />
@@ -52,8 +49,8 @@ export default function ImportantNews({ news }) {
                     </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    {news.map((item, idx) => (
-                        <NewsCard key={idx} news={item} idx={idx} />
+                    {ImportantNewsData.map((item, idx) => (
+                        <NewsCard key={idx} ImportantNewsData={item} idx={idx} />
                     ))}
                 </div>
             </div>

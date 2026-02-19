@@ -1,4 +1,4 @@
-import {Target,Brain, Coffee,BookOpen } from 'lucide-react';
+import { Target, Brain, Coffee, BookOpen } from 'lucide-react';
 
 
 
@@ -17,12 +17,15 @@ const ScoreCard = ({ title, count, description, icon: Icon, color, delay, gradie
     </div>
   </div>
 );
-function VideoTypeScores({countUp}){
- const scores = [
-    { title: 'Productive Videos', count: countUp.productive, description: 'Work & productivity content', icon: Target, color: '#22c55e', gradient: 'from-emerald-500/20 to-green-500/20', delay: 300 },
-    { title: 'Study Videos', count: countUp.study, description: 'Learning & education', icon: BookOpen, color: '#3b82f6', gradient: 'from-blue-500/20 to-cyan-500/20', delay: 400 },
-    { title: 'Brain Rout', count: countUp.brain, description: 'Mental workout content', icon: Brain, color: '#a855f7', gradient: 'from-purple-500/20 to-pink-500/20', delay: 500 },
-    { title: 'Time Pass', count: countUp.timepass, description: 'Entertainment & leisure', icon: Coffee, color: '#f59e0b', gradient: 'from-orange-500/20 to-red-500/20', delay: 600 }
+function VideoTypeScores({ ScoreData }) {
+  if (ScoreData.length === 0) {
+    return null
+  }
+  const scores = [
+    { title: ScoreData[0].type, count: ScoreData[0].totalVideos, description: 'Work & productivity content', icon: Target, color: '#22c55e', gradient: 'from-emerald-500/20 to-green-500/20', delay: 300 },
+    { title: ScoreData[1].type, count: ScoreData[1].totalVideos, description: 'Learning & education', icon: BookOpen, color: '#3b82f6', gradient: 'from-blue-500/20 to-cyan-500/20', delay: 400 },
+    { title: ScoreData[2].type, count: ScoreData[2].totalVideos, description: 'Mental workout content', icon: Brain, color: '#a855f7', gradient: 'from-purple-500/20 to-pink-500/20', delay: 500 },
+    { title: ScoreData[3].type, count: ScoreData[3].totalVideos, description: 'Entertainment & leisure', icon: Coffee, color: '#f59e0b', gradient: 'from-orange-500/20 to-red-500/20', delay: 600 }
   ];
 
   return (

@@ -1,6 +1,10 @@
-import {  Target } from 'lucide-react';
+import { Play, Trophy, Zap, Calendar, BarChart3, PieChart, Activity, Target, Flame, TrendingUp, Sparkles, ArrowUpRight, ChevronRight, Brain, Coffee, Newspaper, Star, BookOpen} from 'lucide-react';
+
 
 function VideoCatagory({ categories, isVisible }) {
+
+const iconMap = { Play, Trophy, Zap, Calendar, BarChart3, PieChart, Activity, Target, Flame, TrendingUp, Sparkles, ArrowUpRight, ChevronRight, Brain, Coffee, Newspaper, Star, BookOpen};
+
   return (
 
     <div className="relative  max-[800px]:w-[95%] mb-10 w-[80%] animate-slide-bottom" style={{ animationDelay: '200ms' }}>
@@ -12,7 +16,7 @@ function VideoCatagory({ categories, isVisible }) {
         </div>
         <div className="space-y-8">
           {categories.map((cat, idx) => {
-            const Icon = cat.icon;
+           const Icon = iconMap[cat.icon];
             return (
               <div
                 key={idx}

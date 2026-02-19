@@ -7,7 +7,10 @@ import { useState } from 'react';
 
 function App() {
   const { isSignedIn, userId } = useAuth();
-  const [categories, setcategories] = useState(null)
+  const [categories, setcategories] = useState([])
+  const [ScoreData, setScoreData] = useState([])
+  const [ImportantNewsData, setImportantNewsData] = useState([])
+  const [SummeryData, setSummeryData] = useState([])
 
   useEffect(() => {
     if (isSignedIn) {
@@ -27,8 +30,22 @@ function App() {
             console.warn("user needs to connect Youtube");
           }
           else {
-            console.log(response.AiData.Data[0].categories);
-            setcategories(response.AiData.Data[0].categories)
+            try {
+              setcategories(response.AiData.Data.categories)
+              setScoreData(response.AiData.Data.productivityTypes)
+              setImportantNewsData(response.AiData.Data.importantNews)
+              let AllSummeryData=[{
+                dailySummary:response.AiData.Data.dailySummary,
+                contentBreakdown:response.AiData.Data.contentBreakdown,
+                finalVerdict:response.AiData.Data.finalVerdict,
+                FinalMetric:response.AiData.Data.FinalMetric,
+              }]
+              setSummeryData(AllSummeryData)
+
+            } catch (error) {
+              console.warn(error)
+            }
+
           }
 
         }
@@ -45,8 +62,8 @@ function App() {
 
   return (
     <>
-      <main className='flex  min-width-screen min-h-screen flex-col bg-neutral-900 text-white'>   
-        <Dashboard  categories={categories}/>
+      <main className='flex  min-width-screen min-h-screen flex-col bg-neutral-900 text-white'>
+        <Dashboard categories={categories} ScoreData={ScoreData} ImportantNewsData={ImportantNewsData} SummeryData={SummeryData} />
       </main>
 
     </>

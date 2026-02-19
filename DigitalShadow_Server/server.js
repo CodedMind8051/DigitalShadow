@@ -58,7 +58,6 @@ app.post('/YoutubeConnectedCheck', async (req, res) => {
                     }
                     else {
                         let AiInputVideoData = await Collection.findOne({ UserId: userId }, { projection: { _id: 0, videos: { $slice: Result } } })
-                        console.log(AiInputVideoData.videos)
                         if (AiInputVideoData.videos?.length) {
                             let AiData = await Aiprocessing(AiInputVideoData.videos, false, userId)
                             res.json({AiData,daysPassed:daysPassed,YoutubeConnected: true})

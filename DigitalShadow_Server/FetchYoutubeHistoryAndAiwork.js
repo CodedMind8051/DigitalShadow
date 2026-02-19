@@ -151,7 +151,8 @@ export async function Aiprocessing(youtubeData, isNewUser, userId) {
                      "name": string,
                      "totalVideos": number,
                      "percentage": number,
-                     "icon":"icon from above list"
+                     "icon":icon from above list,
+                     "color": like #xxxxx (color code)
                    }
                  ],
                  "productivityTypes": [
@@ -166,8 +167,7 @@ export async function Aiprocessing(youtubeData, isNewUser, userId) {
                    {
                      "title": string,
                      "sourceCategory": string,
-                     "reason": string,
-                     "icon":"icon from above list"
+                     "color": like #xxxxx (color code)
                    }
                  ],
                  "importantEvents": [
@@ -179,7 +179,15 @@ export async function Aiprocessing(youtubeData, isNewUser, userId) {
                  ],
                  "dailySummary": string,
                  "contentBreakdown": string,
-                 "finalVerdict": string
+                 "finalVerdict": string,
+                 "FinalMetric":{
+                     {
+                     "TotalVideos": string (All videos that i watch means all videos not just productive ),
+                     "Productive": %,
+                     "TopCategory":string like coding ,
+                     "Streak" :string like 5 
+                   }
+                 }
                }
                --------------------
                INPUT DATA (FULL DAY WATCH HISTORY)
