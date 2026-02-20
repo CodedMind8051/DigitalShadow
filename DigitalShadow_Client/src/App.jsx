@@ -5,12 +5,16 @@ import { useEffect } from 'react';
 import Dashboard from './Dashboard.jsx';
 import { useState } from 'react';
 
+
 function App() {
+
   const { isSignedIn, userId } = useAuth();
   const [categories, setcategories] = useState([])
   const [ScoreData, setScoreData] = useState([])
   const [ImportantNewsData, setImportantNewsData] = useState([])
   const [SummeryData, setSummeryData] = useState([])
+  const [daysPassed, setdaysPassed] = useState(0)
+  const [loading, setloading] = useState(true)
 
   useEffect(() => {
     if (isSignedIn) {
@@ -31,18 +35,38 @@ function App() {
           }
           else {
             try {
-              setcategories(response.AiData.Data.categories)
-              setScoreData(response.AiData.Data.productivityTypes)
-              setImportantNewsData(response.AiData.Data.importantNews)
-              let AllSummeryData=[{
-                dailySummary:response.AiData.Data.dailySummary,
-                contentBreakdown:response.AiData.Data.contentBreakdown,
-                finalVerdict:response.AiData.Data.finalVerdict,
-                FinalMetric:response.AiData.Data.FinalMetric,
-              }]
-              setSummeryData(AllSummeryData)
-
+              if (response.UseCach) {
+                const UserStored = JSON.parse(localStorage.getItem("userData"));
+                setdaysPassed(UserStored.daysPassed)
+                setcategories(UserStored.AiData.Data.categories)
+                setScoreData(UserStored.AiData.Data.productivityTypes)
+                setImportantNewsData(UserStored.AiData.Data.importantNews)
+                let AllSummeryData = [{
+                  dailySummary: UserStored.AiData.Data.dailySummary,
+                  contentBreakdown: UserStored.AiData.Data.contentBreakdown,
+                  finalVerdict: UserStored.AiData.Data.finalVerdict,
+                  FinalMetric: UserStored.AiData.Data.FinalMetric,
+                }]
+                setSummeryData(AllSummeryData)
+                setloading(false)
+              }
+              else {
+                localStorage.setItem("userData", JSON.stringify(response));
+                setdaysPassed(response.daysPassed)
+                setcategories(response.AiData.Data.categories)
+                setScoreData(response.AiData.Data.productivityTypes)
+                setImportantNewsData(response.AiData.Data.importantNews)
+                let AllSummeryData = [{
+                  dailySummary: response.AiData.Data.dailySummary,
+                  contentBreakdown: response.AiData.Data.contentBreakdown,
+                  finalVerdict: response.AiData.Data.finalVerdict,
+                  FinalMetric: response.AiData.Data.FinalMetric,
+                }]
+                setSummeryData(AllSummeryData)
+                setloading(false)
+              }
             } catch (error) {
+              window.location.reload()
               console.warn(error)
             }
 
@@ -50,6 +74,7 @@ function App() {
 
         }
         ).catch((error) => {
+          window.location.reload()
           console.error("Error:", error);
         });
     }
@@ -63,16 +88,18 @@ function App() {
   return (
     <>
       <main className='flex  min-width-screen min-h-screen flex-col bg-neutral-900 text-white'>
-        <Dashboard categories={categories} ScoreData={ScoreData} ImportantNewsData={ImportantNewsData} SummeryData={SummeryData} />
+        <Dashboard
+          loading={loading}
+          daysPassed={daysPassed}
+          categories={categories}
+          ScoreData={ScoreData}
+          ImportantNewsData={ImportantNewsData}
+          SummeryData={SummeryData}
+        />
       </main>
 
     </>
   )
 }
-
-
-
-
-
 
 export default App

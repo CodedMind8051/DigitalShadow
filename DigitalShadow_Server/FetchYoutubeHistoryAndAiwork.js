@@ -184,7 +184,7 @@ export async function Aiprocessing(youtubeData, isNewUser, userId) {
                      {
                      "TotalVideos": string (All videos that i watch means all videos not just productive ),
                      "Productive": %,
-                     "TopCategory":string like coding ,
+                     "TopCategory":string like coding (It is only one),
                      "Streak" :string like 5 
                    }
                  }
@@ -212,13 +212,19 @@ export async function Aiprocessing(youtubeData, isNewUser, userId) {
 
             let AiReplacedData = AiDataString.replaceAll("```", "").replaceAll("json", "")
             let AiJsonData = JSON.parse(AiReplacedData)
-            console.log(AiJsonData)
             let { Collection, Cluster } = await Database("AiProcessedData")
 
             try {
                 if (AiJsonData) {
-                    await Collection.insertOne({ UserId: userId, Data: AiJsonData, Timestamp: Date.now() });
-                    return AiJsonData
+                    let UserExists = !!await Collection.findOne({ UserId: userId }, { projection: { UserId: 1, _id: 0, } })
+                    if (UserExists) {
+                        await Collection.updateOne({ UserId: userId }, { $set: { Data: AiJsonData, Timestamp: Date.now() } }, { upsert: true })
+                        return AiJsonData
+                    }
+                    else {
+                        await Collection.insertOne({ UserId: userId, Data: AiJsonData, Timestamp: Date.now() });
+                        return AiJsonData
+                    }
                 }
             } catch (error) {
                 console.warn(error)
