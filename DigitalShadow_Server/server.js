@@ -12,7 +12,7 @@ dotenv.config()
 const port = 3000
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173',"http://192.168.1.13:5173"],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -26,6 +26,8 @@ app.post('/YoutubeConnectedCheck', async (req, res) => {
     try {
         let user = await clerkClient.users.getUser(req.body.userId)
         let userId = req.body.userId
+        let UserStored = req.body.UserStored
+        let UserTimeStamp=req.body.TimeStamp
         if (user.privateMetadata.Refresh_Token) {
             let { Collection, Cluster } = await Database("LikedHistory")
             let youtubeDataInDatabase = await Collection.findOne({ UserId: req.body.userId })
@@ -34,11 +36,12 @@ app.post('/YoutubeConnectedCheck', async (req, res) => {
                 if (Result === "Refresh Token Expired") {
                     res.json({ YoutubeConnected: false, authUrl: GenerateUrlForYoutubeAccess(userId) })
                 }
-                let TitleData = await Collection.findOne({ UserId: req.body.userId }, { projection: { videos: 1 } })
+                let TitleData = await Collection.findOne({ UserId: req.body.userId }, { projection: { videos: 1, Timestamp: 1 } })
                 let AiData = await Aiprocessing(TitleData, true, userId)
+
                 let daysPassed = 0
                 Cluster.close()
-                res.json({ UseCach: false, AiData, daysPassed: daysPassed, YoutubeConnected: true })
+                res.json({ UseCach: false, AiData, daysPassed: daysPassed, YoutubeConnected: true, Timestamp: TitleData.Timestamp })
             }
             else {
                 let PreviousTimestamp = await Collection.findOne({ UserId: userId }, { projection: { Timestamp: 1 } });
@@ -67,12 +70,20 @@ app.post('/YoutubeConnectedCheck', async (req, res) => {
                         if (AiInputVideoData.videos?.length) {
                             let AiData = await Aiprocessing(AiInputVideoData.videos, false, userId)
                             Cluster.close()
-                            res.json({ UseCach: false, AiData, daysPassed: daysPassed, YoutubeConnected: true })
+                            res.json({ UseCach: false, AiData, daysPassed: daysPassed, YoutubeConnected: true, Timestamp: PreviousTimestamp.Timestamp })
                         }
                     }
                 } else {
-                    res.json({ UseCach: true, YoutubeConnected: true })
-                    Cluster.close()
+                    if (!UserStored || UserTimeStamp !==PreviousTimestamp?.Timestamp) {
+                        let { Collection, Cluster } = await Database("AiProcessedData")
+                        let AiData = await Collection.findOne({ UserId: userId }, { projection: { Data: 1, _id: 0, } })
+                        res.json({ UseCach: false, AiData, daysPassed: daysPassed, YoutubeConnected: true ,Timestamp:PreviousTimestamp.Timestamp})
+                        Cluster.close()
+                    } else {
+                        res.json({ UseCach: true, YoutubeConnected: true ,Timestamp:PreviousTimestamp.Timestamp})
+                        Cluster.close()
+                    }
+
                 }
             }
         }
@@ -102,6 +113,6 @@ app.get('/api/auth/callback/google', async (req, res) => {
 
 
 
-app.listen(port, () => {
+app.listen(port,"0.0.0.0", () => {
     console.log(`Server is running on http://localhost:${port}`)
 })

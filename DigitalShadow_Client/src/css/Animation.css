@@ -1,0 +1,62 @@
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50%       { background-position: 100% 50%; }
+  }
+  @keyframes floatBlob {
+    0%, 100% { transform: scale(1) translate(0, 0); }
+    33%       { transform: scale(1.05) translate(10px, -15px); }
+    66%       { transform: scale(0.97) translate(-8px, 10px); }
+  }
+
+  .nav-animate   { animation: fadeInDown 0.6s ease both; }
+  .hero-badge    { animation: fadeInUp 0.6s ease 0.2s both; }
+  .hero-title    { animation: fadeInUp 0.7s ease 0.35s both; }
+  .hero-sub      { animation: fadeInUp 0.7s ease 0.45s both; }
+  .hero-desc     { animation: fadeInUp 0.7s ease 0.55s both; }
+  .hero-cta      { animation: fadeInUp 0.7s ease 0.65s both; }
+  .hero-chips    { animation: fadeIn  0.8s ease 0.85s both; }
+  .footer-fade   { animation: fadeIn  1s   ease 1s    both; }
+
+  .gradient-text {
+    background: linear-gradient(90deg, #c084fc, #f472b6, #60a5fa);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 4s ease infinite;
+  }
+
+  .blob {
+    animation: floatBlob 8s ease-in-out infinite;
+  }
+  .blob-delay {
+    animation: floatBlob 10s ease-in-out 2s infinite;
+  }
+
+  .cta-btn {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .cta-btn:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 40px rgba(168, 85, 247, 0.55);
+  }
+
+  .chip {
+    transition: border-color 0.25s, background 0.25s;
+  }
+  .chip:hover {
+    border-color: rgba(168,85,247,0.5);
+    background: rgba(168,85,247,0.08);
+  }

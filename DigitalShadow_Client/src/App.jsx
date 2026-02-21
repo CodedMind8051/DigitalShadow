@@ -18,7 +18,8 @@ function App() {
 
   useEffect(() => {
     if (isSignedIn) {
-      fetch("http://localhost:3000/YoutubeConnectedCheck", {
+      const UserStored = JSON.parse(localStorage.getItem("userData"));
+      fetch("http://192.168.1.13:3000/YoutubeConnectedCheck", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -26,6 +27,8 @@ function App() {
         credentials: 'include',
         body: JSON.stringify({
           userId: userId,
+          UserStored:!! UserStored,
+          TimeStamp:UserStored?.Timestamp ?? 0
         }),
       }).then((responses) => responses.json())
         .then((response) => {
@@ -38,20 +41,20 @@ function App() {
               if (response.UseCach) {
                 const UserStored = JSON.parse(localStorage.getItem("userData"));
                 setdaysPassed(UserStored.daysPassed)
-                setcategories(UserStored.AiData.Data.categories)
-                setScoreData(UserStored.AiData.Data.productivityTypes)
-                setImportantNewsData(UserStored.AiData.Data.importantNews)
+                setcategories(UserStored.AiData.categories)
+                setScoreData(UserStored.AiData.productivityTypes)
+                setImportantNewsData(UserStored.AiData.importantNews)
                 let AllSummeryData = [{
-                  dailySummary: UserStored.AiData.Data.dailySummary,
-                  contentBreakdown: UserStored.AiData.Data.contentBreakdown,
-                  finalVerdict: UserStored.AiData.Data.finalVerdict,
-                  FinalMetric: UserStored.AiData.Data.FinalMetric,
+                  dailySummary: UserStored.AiData.dailySummary,
+                  contentBreakdown: UserStored.AiData.contentBreakdown,
+                  finalVerdict: UserStored.AiData.finalVerdict,
+                  FinalMetric: UserStored.AiData.FinalMetric,
                 }]
                 setSummeryData(AllSummeryData)
                 setloading(false)
               }
               else {
-                localStorage.setItem("userData", JSON.stringify(response));
+                localStorage.setItem("userData", JSON.stringify({response}));
                 setdaysPassed(response.daysPassed)
                 setcategories(response.AiData.Data.categories)
                 setScoreData(response.AiData.Data.productivityTypes)
