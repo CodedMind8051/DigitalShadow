@@ -12,7 +12,7 @@ export const AuthClient = () => {
 
 export  const GenerateUrlForYoutubeAccess =(UserId)=> AuthClient().generateAuthUrl({
     access_type: "offline",
-    scope: ['profile', 'email', 'https://www.googleapis.com/auth/youtube.readonly'],
+    scope: ['https://www.googleapis.com/auth/youtube.readonly'],
     prompt: "consent",
     state: UserId
 })

@@ -287,8 +287,6 @@ export async function GetYoutubeDataOfNewUser(refresh_token, access_token, Liked
         console.error("Error fetching YouTube data:")
         return "Refresh Token Expired"
     }
-
-    // await Aiprocessing(YoutubeData.data.items.slice(0, 10).map(video => ({ title: video.snippet.title })))
 }
 
 
@@ -346,6 +344,4 @@ export async function GetYoutubeDataOfExistingUser(refresh_token, access_token, 
         return "Refresh Token Expired"
 
     }
-
-    // await Aiprocessing(YoutubeData.data.items.slice(0, 10).map(video => ({ title: video.snippet.title })))
 }

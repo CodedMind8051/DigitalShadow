@@ -22,10 +22,10 @@ function VideoTypeScores({ ScoreData }) {
     return null
   }
   const scores = [
-    { title: ScoreData[0].type, count: ScoreData[0].totalVideos, description: 'Work & productivity content', icon: Target, color: '#22c55e', gradient: 'from-emerald-500/20 to-green-500/20', delay: 300 },
-    { title: ScoreData[1].type, count: ScoreData[1].totalVideos, description: 'Learning & education', icon: BookOpen, color: '#3b82f6', gradient: 'from-blue-500/20 to-cyan-500/20', delay: 400 },
-    { title: ScoreData[2].type, count: ScoreData[2].totalVideos, description: 'Mental workout content', icon: Brain, color: '#a855f7', gradient: 'from-purple-500/20 to-pink-500/20', delay: 500 },
-    { title: ScoreData[3].type, count: ScoreData[3].totalVideos, description: 'Entertainment & leisure', icon: Coffee, color: '#f59e0b', gradient: 'from-orange-500/20 to-red-500/20', delay: 600 }
+    { title: ScoreData[0]?.type ?? "Productive", count: ScoreData[0]?.totalVideos ?? 0, description: 'Work & productivity content', icon: Target, color: '#22c55e', gradient: 'from-emerald-500/20 to-green-500/20', delay: 300 },
+    { title: ScoreData[1]?.type ?? "Study", count: ScoreData[1]?.totalVideos ?? 0, description: 'Learning & education', icon: BookOpen, color: '#3b82f6', gradient: 'from-blue-500/20 to-cyan-500/20', delay: 400 },
+    { title: ScoreData[2]?.type ?? "Time Pass", count: ScoreData[2]?.totalVideos ?? 0, description: 'Mental workout content', icon: Brain, color: '#a855f7', gradient: 'from-purple-500/20 to-pink-500/20', delay: 500 },
+    { title: ScoreData[3]?.type ?? "Brain Rot", count: ScoreData[3]?.totalVideos ?? 0, description: 'Entertainment & leisure', icon: Coffee, color: '#f59e0b', gradient: 'from-orange-500/20 to-red-500/20', delay: 600 }
   ];
 
   return (

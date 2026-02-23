@@ -19,7 +19,7 @@ function App() {
   useEffect(() => {
     if (isSignedIn) {
       const UserStored = JSON.parse(localStorage.getItem("userData"));
-      fetch("http://192.168.1.13:3000/YoutubeConnectedCheck", {
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/YoutubeConnectedCheck`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

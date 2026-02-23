@@ -29,7 +29,7 @@ function Header() {
             >
               <div className="absolute inset-0 bg-gradient-to-r from-neutral-100 to-white opacity-0 group-hover:opacity-100 transition-opacity" />
               <span className="relative flex items-center gap-1.5 sm:gap-2">
-                <span className="hidden sm:inline">Connect YouTube</span>
+                <span className="hidden sm:inline">YouTube Connected</span>
                 <span className="sm:hidden">Connect</span>
                 <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </span>

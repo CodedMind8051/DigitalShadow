@@ -17,6 +17,7 @@
     "express": "^5.2.1",
     "googleapis": "^170.1.0",
     "mongodb": "^7.0.0",
-    "mongoose": "^9.1.5"
+    "mongoose": "^9.1.5",
+    "serverless-http": "^4.0.0"
   }
 }

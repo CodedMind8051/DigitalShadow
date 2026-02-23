@@ -9,10 +9,12 @@ import { Database } from './database.js';
 
 const app = express()
 dotenv.config()
-const port = 3000
+
+
+const port = process.env.PORT || 5000;
 
 app.use(cors({
-    origin: ['http://localhost:5173',"http://192.168.1.13:5173"],
+    origin: [process.env.Frontend_Url],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -103,7 +105,7 @@ app.get('/api/auth/callback/google', async (req, res) => {
         const code = req.query.code
         let token = await GoogleAuth(code)
         await clerkClient.users.updateUserMetadata(req.query.state, { privateMetadata: { Refresh_Token: token.refresh_token, Access_Token: token.access_token } })
-        res.redirect("http://localhost:5173")
+        res.redirect(process.env.Frontend_Url)
     } catch (error) {
         console.error("Error during Google OAuth callback:", error)
         res.status(500).send("Internal Server Error")
@@ -114,5 +116,5 @@ app.get('/api/auth/callback/google', async (req, res) => {
 
 
 app.listen(port,"0.0.0.0", () => {
-    console.log(`Server is running on http://localhost:${port}`)
+    console.log(`Server is running on ${port}`)
 })

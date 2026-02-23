@@ -2,7 +2,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { ClerkProvider } from '@clerk/clerk-react'
-// import DigitalShadowUI from './cricket_youtube_tracker.jsx'
+
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -11,10 +11,7 @@ if (!PUBLISHABLE_KEY) {
 }
 
 createRoot(document.getElementById('root')).render(
-      <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-        <App />
-{/* <        DigitalShadowUI/> */}
-
-
-      </ClerkProvider>
+  <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+    <App />
+  </ClerkProvider>
 )
