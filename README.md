@@ -1,12 +1,8 @@
 <div align="center">
 
+<img src="DigitalShadow_Client/public/Eye.svg" alt="DigitalShadow Logo" width="40"/>
 
-# <img style="margin-top:6%" src="DigitalShadow_Client/public/Eye.svg" alt="DigitalShadow Logo" width="40"/> DigitalShadow  
-
-### *Your YouTube history, decoded.*
-
-Turn your YouTube watch history into a **daily mirror of your mind**.  
-See what you learned, what distracted you, and where your time really went.
+# DigitalShadow
 
 </div>
 
