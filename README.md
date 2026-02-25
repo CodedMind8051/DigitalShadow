@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🌑 DigitalShadow  
+# <img src="DigitalShadow_Client/public/Eye.svg" alt="DigitalShadow Logo" width="40"/> DigitalShadow  
 
 ### *Your YouTube history, decoded.*
 
@@ -13,10 +13,11 @@ See what you learned, what distracted you, and where your time really went.
 
 ## 🧠 What is DigitalShadow?
 
-DigitalShadow is a web app that connects to your YouTube account and uses AI to analyze what you watched.  
+DigitalShadow is a web app that connects to your YouTube account and uses AI to analyze what you watch.  
+
 It classifies your viewing into **learning, entertainment, news, and distraction**, then generates insights about your **focus, habits, and productivity**.
 
-It doesn't block YouTube.  
+It doesn’t block YouTube.  
 It shows you the truth behind it.
 
 ---
@@ -26,7 +27,6 @@ It shows you the truth behind it.
 - 🔐 Google login with YouTube access  
 - 📺 Reads YouTube watch history  
 - 🤖 AI-based video categorization  
-- ⏱️ Time tracking per content type  
 - 📊 Daily productivity score  
 - 🎨 Clean visual dashboard  
 - 📝 AI-generated daily summary  
@@ -36,8 +36,8 @@ It shows you the truth behind it.
 ## ⚙️ How It Works
 
 1. User signs in with Google  
-2. App fetches YouTube watch history  
-3. Video titles and channels are sent to AI  
+2. The app fetches YouTube watch history  
+3. Video titles are sent to AI  
 4. AI classifies each video  
 5. Time and category data is processed  
 6. A daily report is generated and displayed  
@@ -50,27 +50,29 @@ It shows you the truth behind it.
 - Vite  
 - React  
 - Tailwind CSS  
-- Chart.js  
 
 ### Backend
 - Node.js  
 - Express  
 - MongoDB  
 - YouTube Data API  
-- OpenAI API  
+- Google GenAI API  
 
 ---
 
 ## 📁 Project Structure
+
 ```
 DigitalShadow/
-├── client/          # Vite + React frontend
+├── DigitalShadow_Client/          # Vite + React frontend
 │   ├── src/
 │   ├── public/
 │   └── package.json
-└── server/          # Node.js + Express backend
-    ├── routes/
-    ├── models/
+└── DigitalShadow_Server/          # Node.js + Express backend
+    ├── server.js
+    ├── FetchYoutubeHistoryAndAiwork.js
+    ├── database.js
+    ├── ConnectYoutube.js
     └── package.json
 ```
 
@@ -79,89 +81,98 @@ DigitalShadow/
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js (v16+)
 - MongoDB
 - Google Cloud Console account
-- OpenAI API key
+- Google GenAI API key
+
+---
 
 ### 1. Clone the repository
+
 ```bash
-git clone https://github.com/your-username/DigitalShadow.git
+git clone https://github.com/CodedMind8051/DigitalShadow.git
 cd DigitalShadow
 ```
 
 ---
 
 ### 2. Setup Backend
+
 ```bash
-cd server
+cd DigitalShadow_Server
 npm install
 ```
 
-Create a `.env` file inside `server/`:
+Create a `.env` file inside `DigitalShadow_Server/`:
+
 ```env
-PORT=5000
-YOUTUBE_API_KEY=your_youtube_api_key
-OPENAI_API_KEY=your_openai_api_key
-MONGO_URI=your_mongodb_connection_string
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-SESSION_SECRET=your_session_secret
+GoogleClientID=your_google_client_id
+Google_secret_key=your_google_client_secret
+Google_Callback_url=your_callback_url
+CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+CLERK_SECRET_KEY=your_clerk_secret_key
+Gemini_API_Key=your_gemini_api_key
+MONGODB_URI=your_mongodb_connection_string
+Frontend_Url=your_frontend_url
 ```
 
 Start the backend:
+
 ```bash
-npm run dev
+node server.js
 ```
 
 ---
 
 ### 3. Setup Frontend
+
 ```bash
-cd ../client
+cd ../DigitalShadow_Client
 npm install
 ```
 
-Create a `.env` file inside `client/`:
+Create a `.env` file inside `DigitalShadow_Client/`:
+
 ```env
-VITE_API_URL=http://localhost:5000
-VITE_GOOGLE_CLIENT_ID=your_google_client_id
+VITE_BACKEND_URL=your_backend_url
+VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 ```
 
 Start the frontend:
+
 ```bash
 npm run dev
 ```
 
 The app will run on:
+
 ```
-Frontend: http://localhost:5173
+Frontend: http://localhost:5173  
 Backend: http://localhost:5000
 ```
 
 ---
 
-## 📊 Example Output
-```
-📚 Learning: 42 minutes
-🎬 Entertainment: 1 hour
-⏰ Distraction: 35 minutes
+## 🌐 Live Production
 
-AI Summary:
-"You spent most of your time on entertainment today. 
-Your focus peaked in the morning and dropped after 5 PM."
-```
+DigitalShadow is fully deployed and running in production:
+
+👉 https://digitalshadow.codedmind.in
+
+This is the official, production-ready version of the application.
 
 ---
 
 ## 🔮 Future Ideas
 
-- [ ] Weekly and monthly reports
+- [ ] Comparison with friends 
+- [ ] Weekly and monthly reports 
 - [ ] Chrome extension
-- [ ] Channel blacklisting
-- [ ] AI habit coach
-- [ ] Focus streaks
-- [ ] Comparison with friends
+- [ ] Channel blacklisting 
+- [ ] AI habit coach 
+- [ ] Focus streaks 
 - [ ] Export reports as PDF
 
 ---
@@ -174,7 +185,7 @@ DigitalShadow was built for a hackathon to explore how **AI + personal data** ca
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome. Feel free to submit a Pull Request.
 
 ---
 
@@ -185,9 +196,7 @@ MIT License
 ---
 
 <div align="center">
-
-THink , design and buid by Coded_mind__
-
-**[⭐ Star this repo](https://github.com/your-username/DigitalShadow)** if you found it useful!
-
-</div>
+   Think, design, and—made by Coded_Mind__ !
+   **[⭐ Star this repo](https://github.com/CodedMind8051/DigitalShadow.git)** 
+   if you found it useful! 
+ </div>

@@ -38,7 +38,7 @@ export default function HomeNotLogin() {
           DigitalShadow turns your online activity into clarity.
           See what you learn, what you waste, and what quietly steals your focus.
         </p>
-        <div className="hero-cta mt-12 flex flex-col sm:flex-row gap-4">
+        <div className="hero-cta mt-12 bg-[#060607] flex flex-col sm:flex-row gap-4">
           <SignInButton mode="modal">
             <button className="cta-btn group px-8 py-4 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold flex items-center justify-center space-x-2">
               <span>Get Started Free</span>

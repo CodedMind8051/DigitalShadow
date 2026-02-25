@@ -32,8 +32,15 @@ function Dashboard({ loading, daysPassed, categories, ScoreData, ImportantNewsDa
                     <div className='w-full flex items-center justify-center mt-5'>
                         <CompleteSummary SummeryData={SummeryData} />
                     </div>
-                </div>}
-
+                    <div className='w-full flex items-center justify-center mt-5'>
+                        <div className="flex flex-col p-2.5 mb-7.5  justify-center  items-center  text-[#818183]" style={{opacity: 1 ,transform: "none"}}>
+                            <p className="font-semibold">Think, design, and—made by
+                                <span className="font-bold">Coded_Mind__  !</span>
+                            </p>
+                            <p>© 2025. All rights reserved.</p></div>
+                    </div>
+                </div>
+                }
         </div>
     )
 }
