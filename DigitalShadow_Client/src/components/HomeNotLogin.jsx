@@ -1,6 +1,7 @@
 import { SignInButton } from '@clerk/clerk-react';
 import { Activity, Eye, Shield } from 'lucide-react';
 import "../css/Animation.css"
+import { Link } from "react-router-dom";
 
 export default function HomeNotLogin() {
   return (
@@ -19,7 +20,7 @@ export default function HomeNotLogin() {
             Sign In
           </button>
         </SignInButton>
-      </nav>  
+      </nav>
       <main className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-40 md:pt-52 pb-20">
         <div className="hero-badge inline-flex items-center space-x-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-8">
           <Activity className="w-4 h-4 text-purple-400" />
@@ -63,9 +64,15 @@ export default function HomeNotLogin() {
         <div className="text-center">
           <p className="text-sm text-gray-500">Built for people who want control, not dopamine.</p>
           <div className="mt-3 flex items-center justify-center space-x-6 text-xs text-gray-600">
-            <a href="#" className="hover:text-gray-400 transition">Privacy</a>
-            <a href="#" className="hover:text-gray-400 transition">Terms</a>
-            <a href="#" className="hover:text-gray-400 transition">Support</a>
+            <Link to="/privacy" className="hover:text-gray-400 transition">
+              Privacy
+            </Link>
+            <Link to="/terms" className="hover:text-gray-400 transition">
+              Terms
+            </Link>
+            <a href="mailto:shahzadekhan296@gmail.com" className="hover:text-gray-400 transition">
+              Support
+            </a>
           </div>
         </div>
       </footer>
