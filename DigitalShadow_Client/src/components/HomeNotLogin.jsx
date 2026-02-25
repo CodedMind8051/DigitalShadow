@@ -24,12 +24,12 @@ export default function HomeNotLogin() {
       <main className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-40 md:pt-52 pb-20">
         <div className="hero-badge inline-flex items-center space-x-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-8">
           <Activity className="w-4 h-4 text-purple-400" />
-          <span className="text-sm text-purple-300">Digital Awareness Platform</span>
+          <span className="text-sm text-purple-300">Awareness Platform</span>
         </div>
         <h2 className="hero-title text-5xl md:text-7xl font-extrabold leading-tight max-w-4xl mb-6">
           Understand your
           <span className="gradient-text block mt-2">
-            digital behavior.
+            behavior.
           </span>
           <span className="block mt-2 text-gray-400 text-3xl md:text-5xl">
             Not your excuses.
