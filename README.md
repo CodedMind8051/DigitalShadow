@@ -1,6 +1,7 @@
 <div align="center">
 
-# <img src="DigitalShadow_Client/public/Eye.svg" alt="DigitalShadow Logo" width="40"/> DigitalShadow  
+
+# <img style="margin-top:6%" src="DigitalShadow_Client/public/Eye.svg" alt="DigitalShadow Logo" width="40"/>DigitalShadow  
 
 ### *Your YouTube history, decoded.*
 
