@@ -3,7 +3,7 @@
 <img src="DigitalShadow_Client/public/Eye.svg" alt="DigitalShadow Logo" width="40"/>
 
 # DigitalShadow
-
+# 👉 https://digitalshadow.codedmind.in
 </div>
 
 ---
@@ -193,7 +193,7 @@ MIT License
 ---
 
 <div align="center">
-   Think, design, and—made by Coded_Mind__ !
-   **[⭐ Star this repo](https://github.com/CodedMind8051/DigitalShadow.git)** 
-   if you found it useful! 
+
+  # Think, design, and—made by Coded_Mind__ !
+  # [⭐ Star this repo](https://github.com/CodedMind8051/DigitalShadow.git) if you found it useful! 
  </div>
