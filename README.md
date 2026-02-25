@@ -194,6 +194,6 @@ MIT License
 
 <div align="center">
 
-  # Think, design, and—made by Coded_Mind__ !
-  # [⭐ Star this repo](https://github.com/CodedMind8051/DigitalShadow.git) if you found it useful! 
+  ### Think, design, and—made by Coded_Mind__ !
+  ### [⭐ Star this repo](https://github.com/CodedMind8051/DigitalShadow.git) if you found it useful! 
  </div>
