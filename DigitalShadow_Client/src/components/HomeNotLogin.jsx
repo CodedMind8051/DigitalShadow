@@ -12,7 +12,7 @@ export default function HomeNotLogin() {
         <div className="flex items-center space-x-3">
           <Eye className="w-8 h-8 text-purple-400" />
           <h1 className="text-base font-bold tracking-wide bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-            Digital Shadow
+            DigitalShadow
           </h1>
         </div>
         <SignInButton mode="modal">
